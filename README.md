@@ -82,3 +82,51 @@ Connect the repository to Netlify and accept the defaults: everything is in [`ne
 ## License
 
 [MIT](LICENSE)
+
+## Exploring Phantom-Guard
+NO CREDENTIALS NEEDED. No login, no API keys, no environment variables.
+The app runs entirely in the browser; nothing you paste is uploaded.
+
+LIVE APP:  https://phantom-guard-yashvi.netlify.app/
+CODE:      https://github.com/yashvikothari/phantom-guard
+
+QUICK TEST (about 3 minutes)
+
+Mode 1, "Inspect Haunted Cloud" (opens by default)
+1. The dashboard summarizes a fictional AWS account (the Haunted Mansion).
+2. Click the IAM role "phantom-admin". A drawer opens with its estimated
+   CVSS score, a plain-language risk explanation, and a side-by-side diff:
+   vulnerable on the left, hardened on the right.
+3. Click "Perform exorcism", then "Confirm exorcism". The card turns green,
+   the poltergeist count drops, and "Exorcisms done" goes to 1.
+   Use "Reset the account" to start over.
+
+Mode 2, "Scan Custom Config"
+4. Click the "Dockerfile" sample, then "Scan" (or Ctrl/Cmd+Enter).
+   Expected: 1 HIGH finding, PG-CTR-001 (container runs as root), at line 8,
+   with a Vulnerable/Hardened diff and a "Copy hardened version" button.
+5. Click the "Terraform" sample, then "Scan".
+   Expected: 6 findings (2 critical, 2 high, 2 medium), each with its
+   source line: public S3 ACL, SSH open to 0.0.0.0/0, unencrypted EBS
+   volume, wildcard S3 permissions, and two S3 settings.
+6. Paste your own Terraform, Dockerfile or IAM JSON policy, or drop a
+   file (limit 1 MiB). The scan time is shown on the page.
+
+THINGS TO KNOW
+- The Inspector data is fictional (AWS example account 123456789012).
+- CVSS scores are estimates computed with the CVSS v3.1 equations from a
+  vector PhantomGuard assigns per rule and severity. They are not NVD ratings.
+- Terraform support covers 10 resource types. Values that depend on variables
+  or references are reported as unresolved, not guessed.
+- Mode 1 applies fixes in memory. Mode 2 only shows and copies them.
+  Nothing writes to any cloud account.
+
+KIRO FILES: the .kiro/ folder has the spec (requirements, design, tasks),
+steering files, and the sync-rule-tests hook.
+
+RUN LOCALLY (Node 20.19 or newer)
+  npm install
+  npm run dev          # playground at http://localhost:5173
+  npm run build
+  node packages/cli-toolkit/dist/cli.js scan <file>
+
