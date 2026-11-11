@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+coverage
+.netlify
+.scratch
+package-lock.json
+LICENSE
+# Markdown specs and steering are edited by people and agents; Prettier would reflow their tables.
+*.md
+netlify.toml

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PhantomGuard ghost">
+  <rect width="64" height="64" rx="14" fill="#020617"/>
+  <path d="M32 10c-9.4 0-17 7.4-17 16.5V50l5.7-4.4L26 50l6-4.4L38 50l5.3-4.4L49 50V26.5C49 17.4 41.4 10 32 10z" fill="none" stroke="#c4b5fd" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="26" cy="27" r="3.2" fill="#e2e8f0"/>
+  <circle cx="38" cy="27" r="3.2" fill="#e2e8f0"/>
+</svg>

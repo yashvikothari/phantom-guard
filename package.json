@@ -1,0 +1,49 @@
+{
+  "name": "phantomguard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PhantomGuard: a client-side static security analyzer for Terraform, Dockerfiles and IAM policies, wrapped in a haunted web playground. Kiroween 2026, Costume Contest.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "security",
+    "static-analysis",
+    "terraform",
+    "docker",
+    "iam",
+    "aws",
+    "cis-benchmark",
+    "kiroween"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "npm run dev -w @phantomguard/web-playground",
+    "build": "npm run build:engine && npm run build:cli && npm run build:web",
+    "build:engine": "npm run build -w @phantomguard/core-engine",
+    "build:cli": "npm run build -w @phantomguard/cli-toolkit",
+    "build:web": "npm run build -w @phantomguard/web-playground",
+    "typecheck": "npm run build:engine && npm run typecheck --workspaces --if-present",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run test --workspaces --if-present",
+    "test:property": "npm run test:property --workspaces --if-present",
+    "audit:governance": "node scripts/audit-governance.mjs",
+    "audit:secrets": "node scripts/audit-secrets.mjs",
+    "audit:precommit": "npm run audit:governance && npm run audit:secrets && npm run format:check && npm run lint && npm run typecheck && npm test",
+    "clean": "node -e \"for (const d of ['packages/core-engine/dist','packages/cli-toolkit/dist','packages/web-playground/dist']) require('node:fs').rmSync(d, { recursive: true, force: true })\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.0",
+    "eslint": "^9.30.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "prettier": "^3.6.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.40.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@phantomguard/core-engine",
+  "version": "0.1.0",
+  "description": "PhantomGuard static security analysis engine: parsers, detection rules and exorcism patches. Environment-agnostic, zero runtime dependencies.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:property": "vitest run --dir test --reporter=verbose"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "fast-check": "^4.0.0",
+    "vitest": "^3.2.0"
+  }
+}

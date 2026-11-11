@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Sync Detection Rule Property Tests",
+      "trigger": "PostFileSave",
+      "description": "When a detection rule source file is saved, create or update its fast-check property-based test so every rule always has matching tests.",
+      "matcher": "packages/core-engine/src/rules/.+\\.ts$",
+      "action": {
+        "type": "agent",
+        "prompt": "A PhantomGuard detection rule source file under packages/core-engine/src/rules/ was just saved. Keep its property-based tests in sync, following .kiro/steering/tech.md and .kiro/steering/secops-guardrails.md.\n\nSkip silently if the saved file is src/rules/index.ts (the registry) or declares no DetectionRule.\n\nOtherwise:\n1. Read the saved rule and identify its id, severity, appliesTo kinds, evaluate() and remediate() behavior.\n2. Locate or create the mirrored test at packages/core-engine/test/rules/<same relative path without .ts>.property.test.ts. Reuse arbitraries from packages/core-engine/test/arbitraries/ and extend them instead of duplicating generators.\n3. Make sure the test file asserts, with fast-check (numRuns >= 200, seed logged on failure): (a) soundness: every generated violating resource yields a finding with this rule id; (b) no false positives: every generated compliant resource yields none; (c) determinism: evaluating the same resource twice returns deeply equal results; (d) patch verification: applying the ExorcismPatch removes this rule's finding for that resource and introduces no new finding; (e) patch idempotence: applying the same patch twice equals applying it once; (f) least privilege: a patch never adds a wildcard or widens access.\n4. Tag every property with a comment of the form `Feature: phantom-guard, Property N: <name>` and `Validates: Requirements X.Y`, using ids from .kiro/specs/phantom-guard/requirements.md.\n5. Run `npm test -w @phantomguard/core-engine`. If a property fails, report the shrunk counterexample and fix the rule or the test, whichever is wrong. Never weaken a rule or loosen a property just to make a test pass; ask the user when the requirement itself looks wrong.\n6. Reply with a two-line summary: the test file touched and the pass/fail result."
+      }
+    }
+  ]
+}

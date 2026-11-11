@@ -1,0 +1,118 @@
+@import 'tailwindcss';
+
+/*
+ * PhantomGuard design tokens (Tailwind CSS v4, CSS-first).
+ * Red means "this is a problem". Green means "this is safe now". Nothing else uses them.
+ * Contrast was measured on slate-950 / 900 / 800; see .kiro/steering/product.md.
+ */
+@theme {
+  --color-neon-red: #ff2d55;
+  --color-neon-green: #39ff88;
+
+  --shadow-neon-red: 0 0 4px rgb(255 45 85 / 0.6), 0 0 18px rgb(255 45 85 / 0.35);
+  --shadow-neon-green: 0 0 4px rgb(57 255 136 / 0.55), 0 0 18px rgb(57 255 136 / 0.3);
+
+  /* System fonts only: the CSP allows no external font. */
+  --font-display: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+
+  --animate-flicker: flicker 5s linear infinite;
+  --animate-breathe: breathe 4s ease-in-out infinite;
+  --animate-drift: drift 40s ease-in-out infinite alternate;
+  --animate-slide-in: slide-in 220ms ease-out;
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(2rem);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  /* Three short dips per cycle, never more than two within one second, and never below 70%
+     opacity, so it reads as candlelight and stays well under the flash thresholds. */
+  @keyframes flicker {
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+      opacity: 1;
+    }
+    20%,
+    24%,
+    55% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 0.75;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes drift {
+    from {
+      transform: translateX(-4%);
+    }
+    to {
+      transform: translateX(4%);
+    }
+  }
+}
+
+@utility text-glow-red {
+  text-shadow: 0 0 10px rgb(255 45 85 / 0.7);
+}
+
+@utility text-glow-green {
+  text-shadow: 0 0 10px rgb(57 255 136 / 0.6);
+}
+
+/* Brand glow. Violet is neutral chrome, so red and green keep their meaning. */
+@utility text-glow-violet {
+  text-shadow: 0 0 14px rgb(167 139 250 / 0.55);
+}
+
+/*
+ * Glass panel: slate-900 at 62% over the page, a hairline white border and a blur. Because the
+ * panel is darker than anything behind it, text contrast is at least that on solid slate-900
+ * (measured in product.md, "Glass panels").
+ */
+@utility glass-panel {
+  background-color: rgb(15 23 42 / 0.62);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(12px) saturate(120%);
+  box-shadow:
+    0 8px 32px rgb(0 0 0 / 0.35),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+
+/* One visible focus style for every interactive element. violet-300 passes 3:1 on all surfaces. */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid #c4b5fd;
+    outline-offset: 2px;
+  }
+}
+
+/* Backstop: motion-safe: variants already gate each animation. This stops anything that slips through. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

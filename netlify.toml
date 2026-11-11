@@ -1,0 +1,47 @@
+# PhantomGuard - Netlify configuration
+# Zero-config deploy: connect the repo, accept these defaults, done.
+# The playground is a static SPA. There are no functions, no server runtime
+# and no environment variables to set.
+
+[build]
+  # Netlify installs workspace dependencies itself before this command runs.
+  # Build only what the site needs: the playground compiles core-engine from
+  # source through a Vite alias, so no separate engine build is required.
+  command = "npm run build:web"
+  publish = "packages/web-playground/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--no-audit --no-fund"
+
+# SPA fallback: unknown paths serve index.html with 200 so client routing works.
+# Real files in dist/ (assets, favicon) are served first because force is false.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security headers. The playground analyzes user-pasted infrastructure code
+# entirely in the browser, so the CSP forbids every network origin except self.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Cross-Origin-Opener-Policy = "same-origin"
+
+# Hashed build assets never change, so cache them for a year.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The HTML shell must always revalidate so new deploys show up immediately.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
